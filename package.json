@@ -1,0 +1,17 @@
+{
+  "name": "pelan-dewan-rahmah",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pelan kedudukan Dewan Rahmah (2D dan 3D) untuk Hari Apresiasi 2026",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/main.js --bundle --format=iife --minify --target=es2020 --outfile=dist/app.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  }
+}
