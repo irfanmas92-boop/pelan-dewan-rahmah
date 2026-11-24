@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pelan Dewan Rahmah · Hari Apresiasi 2026</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-mode="2d">
+  <header class="top">
+    <div class="brand">
+      <p class="eyebrow">Hari Apresiasi 2026</p>
+      <h1>Pelan Dewan Rahmah</h1>
+    </div>
+    <div class="seg" role="tablist" aria-label="Pilih paparan">
+      <button type="button" role="tab" id="tab-2d" aria-controls="panel-2d" aria-selected="true">Pelan 2D</button>
+      <button type="button" role="tab" id="tab-3d" aria-controls="panel-3d" aria-selected="false">Pandangan 3D</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="panel-2d" role="tabpanel" aria-labelledby="tab-2d">
+      <div class="bar">
+        <button type="button" class="btn" id="btn-cetak">Cetak</button>
+        <button type="button" class="btn" id="btn-png">Muat turun PNG</button>
+        <p class="hint">Pentas di sebelah kanan. Di telefon, leret ke sisi untuk melihat seluruh pelan.</p>
+      </div>
+      <div class="sheet-wrap">
+        <div class="sheet" id="plan2d"></div>
+      </div>
+    </section>
+
+    <section id="panel-3d" role="tabpanel" aria-labelledby="tab-3d" hidden>
+      <div class="bar">
+        <div class="views" role="group" aria-label="Sudut pandangan">
+          <button type="button" class="btn" data-view="semua" aria-pressed="true">Keseluruhan</button>
+          <button type="button" class="btn" data-view="atas" aria-pressed="false">Dari atas</button>
+          <button type="button" class="btn" data-view="penonton" aria-pressed="false">Dari tempat duduk</button>
+          <button type="button" class="btn" data-view="pentas" aria-pressed="false">Dari pentas</button>
+          <button type="button" class="btn" data-view="vip" aria-pressed="false">Laluan VIP</button>
+        </div>
+        <label class="check"><input type="checkbox" id="toggle-label" checked> Label</label>
+      </div>
+      <div class="stage3d" id="plan3d"></div>
+      <p class="hint hint3d">Seret untuk pusing, skrol atau cubit untuk zum, klik kanan atau dua jari untuk gerak.</p>
+    </section>
+  </main>
+
+  <script src="dist/app.js"></script>
+</body>
+</html>
