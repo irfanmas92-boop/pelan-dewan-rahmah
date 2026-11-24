@@ -15,6 +15,7 @@ const at = (range) => box(rangeRect(range));
 
 const FLOOR = 0.04; // aras lantai dewan
 const STAGE_TOP = 1.05;
+const TAG_K = 0.027; // tinggi label sebagai pecahan tinggi skrin
 const FONT = "'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif";
 
 const C3 = {
@@ -127,8 +128,8 @@ export function init3d(container) {
     const tex = new THREE.CanvasTexture(canvas);
     tex.colorSpace = THREE.SRGBColorSpace;
     const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false, sizeAttenuation: false }));
-    const k = 0.027;
-    sprite.scale.set((k * canvas.width) / canvas.height, k, 1);
+    sprite.userData.ratio = canvas.width / canvas.height;
+    sprite.scale.set(TAG_K * sprite.userData.ratio, TAG_K, 1);
     sprite.center.set(0.5, 0);
     sprite.position.set(x, yTop, z);
     sprite.renderOrder = 10;
@@ -480,8 +481,9 @@ export function init3d(container) {
   const vipIn = at('J31');
   const vipSeats = at('Y22');
   const VIEWS = {
-    semua: { pos: [-19.5, 21, 25], target: [0.2, 0, 1.4], fit: true },
-    atas: { pos: [0.6, 43, 0.05], target: [0.6, 0, 0], fit: true },
+    semua: { pos: [-19.5, 21, 25], target: [0.2, 0, 1.4], fit: 1.7 },
+    semuaTegak: { pos: [-27, 27, 8], target: [1.5, 0, 0.6], fit: 1.15 },
+    atas: { pos: [0.6, 43, 0.05], target: [0.6, 0, 0], fit: 1.7 },
     penonton: { pos: [aisleBack.cx - 2.2, 2.6, aisleBack.cz], target: [stageMid.cx, 2.0, stageMid.cz] },
     pentas: { pos: [stageMid.cx + 0.6, 3.6, stageMid.cz], target: [aisleMid.cx, 0.2, aisleMid.cz] },
     vip: { pos: [vipIn.cx + 0.3, 2.4, vipIn.cz + 0.15], target: [vipSeats.cx, 0.5, vipIn.cz - 2.4] },
@@ -492,12 +494,14 @@ export function init3d(container) {
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function resolveView(name) {
-    const v = VIEWS[name] || VIEWS.semua;
+    let v = VIEWS[name] || VIEWS.semua;
+    // skrin menegak (telefon): pandang dari belakang penonton supaya sisi pendek pelan melintang skrin
+    if (name === 'semua' && camera.aspect < 1) v = VIEWS.semuaTegak;
     const target = new THREE.Vector3(...v.target);
     const pos = new THREE.Vector3(...v.pos);
     if (v.fit) {
-      // skrin sempit (telefon menegak) perlukan kamera lebih jauh supaya seluruh pelan muat
-      const f = Math.max(1, 1.7 / camera.aspect);
+      // skrin sempit perlukan kamera lebih jauh supaya seluruh pelan muat
+      const f = Math.max(1, v.fit / camera.aspect);
       pos.sub(target).multiplyScalar(f).add(target);
     }
     return { pos, target };
@@ -527,6 +531,11 @@ export function init3d(container) {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    // label ikut tinggi skrin; kecilkan sedikit pada skrin menegak supaya tidak bertindih
+    const f = Math.min(1, Math.max(0.72, 0.55 + 0.35 * camera.aspect));
+    for (const o of tags.children) {
+      if (o.isSprite) o.scale.set(TAG_K * f * o.userData.ratio, TAG_K * f, 1);
+    }
     needsRender = true;
   }
   const ro = new ResizeObserver(resize);
