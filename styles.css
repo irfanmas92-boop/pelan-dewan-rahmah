@@ -216,6 +216,32 @@ section[hidden] { display: none; }
   .views .btn { flex: none; }
 }
 
+.kapsyen {
+  position: absolute;
+  left: 28px;
+  bottom: 24px;
+  z-index: 2;
+  margin: 0;
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(247, 244, 236, 0.94);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 1.05rem;
+  pointer-events: none;
+}
+
+.kapsyen[hidden] { display: none; }
+.kapsyen strong { font-weight: 700; }
+.kapsyen span { color: var(--accent); font-weight: 600; }
+
+body.foto .top,
+body.foto .bar,
+body.foto .hint3d { display: none; }
+body.foto .stage3d { border: 0; }
+
 @page { size: A4 landscape; margin: 8mm; }
 
 @media print {

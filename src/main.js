@@ -60,8 +60,38 @@ document.querySelectorAll('[data-view]').forEach((btn) => {
   });
 });
 
+$('#btn-gambar3d').addEventListener('click', () => {
+  if (!view3d) return;
+  const aktif = document.querySelector('[data-view][aria-pressed="true"]');
+  view3d.snapshot(`pelan-dewan-rahmah-3d-${aktif ? aktif.dataset.view : 'semua'}.png`);
+});
+
 $('#toggle-label').addEventListener('change', (e) => {
   if (view3d) view3d.setLabels(e.currentTarget.checked);
 });
 
-show(location.hash === '#3d' ? '3d' : '2d');
+// Mod gambar: ?foto=semua|atas|penonton|pentas|vip memaparkan 3D sahaja tanpa butang,
+// untuk menghasilkan fail gambar. Tambah &label=0 untuk sembunyikan label terapung.
+const params = new URLSearchParams(location.search);
+const foto = params.get('foto');
+const KAPSYEN = {
+  semua: 'Pandangan keseluruhan',
+  atas: 'Pandangan dari atas',
+  penonton: 'Pandangan dari tempat duduk',
+  pentas: 'Pandangan dari pentas',
+  vip: 'Laluan VIP',
+};
+
+if (foto && KAPSYEN[foto]) {
+  document.body.classList.add('foto');
+  show('3d');
+  const kapsyen = $('#kapsyen');
+  kapsyen.querySelector('span').textContent = KAPSYEN[foto];
+  kapsyen.hidden = false;
+  if (view3d) {
+    view3d.setView(foto, true);
+    if (params.get('label') === '0') view3d.setLabels(false);
+  }
+} else {
+  show(location.hash === '#3d' ? '3d' : '2d');
+}

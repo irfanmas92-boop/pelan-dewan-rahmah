@@ -481,9 +481,9 @@ export function init3d(container) {
   const vipIn = at('J31');
   const vipSeats = at('Y22');
   const VIEWS = {
-    semua: { pos: [-19.5, 21, 25], target: [0.2, 0, 1.4], fit: 1.7 },
+    semua: { pos: [-21.5, 23, 27.5], target: [-0.8, 0, 1.8], fit: 1.7 },
     semuaTegak: { pos: [-27, 27, 8], target: [1.5, 0, 0.6], fit: 1.15 },
-    atas: { pos: [0.6, 43, 0.05], target: [0.6, 0, 0], fit: 1.7 },
+    atas: { pos: [0.6, 47, 0.75], target: [0.6, 0, 0.7], fit: 1.7 },
     penonton: { pos: [aisleBack.cx - 2.2, 2.6, aisleBack.cz], target: [stageMid.cx, 2.0, stageMid.cz] },
     pentas: { pos: [stageMid.cx + 0.6, 3.6, stageMid.cz], target: [aisleMid.cx, 0.2, aisleMid.cz] },
     vip: { pos: [vipIn.cx + 0.3, 2.4, vipIn.cz + 0.15], target: [vipSeats.cx, 0.5, vipIn.cz - 2.4] },
@@ -570,6 +570,20 @@ export function init3d(container) {
   return {
     setView,
     setLabels,
+    // Simpan sudut semasa sebagai PNG
+    snapshot(filename = 'pelan-dewan-rahmah-3d.png') {
+      renderer.render(scene, camera);
+      renderer.domElement.toBlob((png) => {
+        if (!png) return;
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(png);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      }, 'image/png');
+    },
     pause() { running = false; cancelAnimationFrame(raf); },
     resume() { if (!running) { running = true; needsRender = true; raf = requestAnimationFrame(frame); } },
     // untuk semakan automatik
